@@ -397,8 +397,13 @@ static void lis35de_update_work_func(struct work_struct *work)
 		
 			logd(TAG "report x=%d, y=%d, z=%d\r\n", dev->x, dev->y, dev->z);	
 
+#ifdef CONFIG_SMBA1011_BATTERY /* for LuvPad Battery, Pulled from source and patched in by GoJimi */
+			input_report_abs(dev->input_dev, ABS_X, dev->x);	// +
+			input_report_abs(dev->input_dev, ABS_Y, dev->y);	// +
+#else
 			input_report_abs(dev->input_dev, ABS_X, -dev->x);	// -
 			input_report_abs(dev->input_dev, ABS_Y, -dev->y);	// -
+#endif
 			input_report_abs(dev->input_dev, ABS_Z, dev->z);
 			input_sync(dev->input_dev);
 		}
